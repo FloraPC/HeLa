@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HeLa — Jornada do Autocuidado (Acessível)</title>
+
+    <meta name="theme-color" content="#FF7A8A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="HeLa">
+    <meta name="color-scheme" content="light">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="bolhas"></div>
+
+    <div class="app">
+
+        <div class="barra-acessibilidade" role="toolbar" aria-label="Ferramentas de acessibilidade">
+            <button onclick="mudarFonte(-1)" aria-label="Diminuir tamanho da letra">🔤 A−</button>
+            <button onclick="mudarFonte(1)" aria-label="Aumentar tamanho da letra">🔤 A+</button>
+            <button id="btn-contraste" onclick="alternarContraste()" aria-pressed="false" aria-label="Ativar ou desativar alto contraste">◐ Contraste</button>
+            <button id="btn-som" onclick="alternarSom()" aria-pressed="false" aria-label="Ligar ou desligar som">🔊 Som</button>
+            <button onclick="abrirComoJogar()" aria-label="Ver como jogar">❓ Como Jogar</button>
+        </div>
+
+        <div class="barra-app">
+            <div class="bolinha-logo">🧬</div>
+            <span class="nome-app">HeLa · Jornada do Autocuidado</span>
+        </div>
+
+        <section id="tela-inicio" class="card">
+            <div class="topo-selo"><span class="selo">Museu Dinâmico Interdisciplinar · MUDI/UEM</span></div>
+            <h1 class="logo">HeLa</h1>
+            <p class="subtitulo">Escape Room · O Cofre do Conhecimento</p>
+            <div class="cofre-visual"><span>🔐</span><span>🔐</span><span>🔐</span><span>🔐</span><span>🔐</span></div>
+
+            <div class="intro-texto">
+                Bem-vindo(a) à <strong>Sala HeLa</strong>! Um cofre guarda a saída — e ele só se abre com
+                conhecimento. Em <strong>5 desafios curtos</strong>, você vai aprender sobre a
+                <strong>prevenção do câncer de colo do útero e da próstata</strong>, sobre autocuidado, e
+                sobre a história de <strong>Henrietta Lacks</strong>.
+            </div>
+
+            <div class="regra-vitoria">🔑 Acerte pelo menos 3 dos 5 desafios para abrir o cofre.</div>
+
+            <button class="btn-ouvir" onclick="lerTexto(textoIntroducao)">🔊 Ouvir esta introdução</button>
+            <button class="btn-principal" onclick="iniciarJogo()">▶ Entrar na Sala</button>
+            <button class="btn-secundario" onclick="abrirComoJogar()">❓ Como Jogar</button>
+        </section>
+
+        <section id="tela-jogo" class="card hidden">
+            <div class="hud">
+                <div class="cadeados" id="cadeados"></div>
+                <div class="hud-info">
+                    <span>🚪 Fase <b id="fase-atual">1</b>/5</span>
+                    <span>✅ Acertos: <b id="acertos-hud">0</b>/5</span>
+                </div>
+            </div>
+
+            <button class="btn-ouvir" onclick="lerTexto(textoLeituraAtual)">🔊 Ouvir esta fase</button>
+
+            <div id="conteudo-fase"></div>
+
+            <div id="feedback" class="feedback"></div>
+
+            <button id="btn-continuar" class="btn-secundario hidden" onclick="avancarFase()">Continuar →</button>
+        </section>
+
+        <section id="tela-sucesso" class="card hidden">
+            <div class="final-emoji">🗝️✨</div>
+            <h2 class="final-titulo" style="color:var(--menta-escura);">O cofre se abriu! Você conseguiu!</h2>
+            <p class="final-score">Você acertou <span id="acertos-sucesso">0</span> de 5 fases</p>
+            <div class="recap">
+                <h3>📌 Por que isso importa</h3>
+                <ul>
+                    <li>As células de Henrietta Lacks (HeLa) foram retiradas durante o tratamento de um câncer de colo do útero, em 1951, sem o seu consentimento.</li>
+                    <li>Elas se tornaram a primeira linhagem humana capaz de se multiplicar indefinidamente em laboratório, impulsionando vacinas, tratamentos e pesquisas até hoje.</li>
+                    <li>O câncer de colo do útero está entre os que mais podem ser prevenidos: o HPV tem vacina, e o exame preventivo (Papanicolau) detecta alterações cedo.</li>
+                    <li>Homens também se cuidam: exames de rotina ajudam a prevenir e detectar cedo problemas na próstata.</li>
+                    <li>Falar sobre Henrietta Lacks também é falar sobre ética, consentimento e respeito no cuidado com a saúde de todas as pessoas.</li>
+                </ul>
+            </div>
+            <button class="btn-ouvir" onclick="lerTexto(textoRecapVitoria)">🔊 Ouvir este resumo</button>
+            <button class="btn-principal" onclick="reiniciarJogo()">🔄 Jogar Novamente</button>
+        </section>
+
+        <section id="tela-falha" class="card hidden">
+            <div class="final-emoji">🔒</div>
+            <h2 class="final-titulo" style="color:var(--vermelho);">O cofre continua fechado</h2>
+            <p class="final-score">Você acertou <span id="acertos-falha">0</span> de 5 fases (mínimo necessário: 3)</p>
+            <div class="intro-texto">
+                Não desanime! Cada tentativa é uma chance de aprender mais sobre prevenção e autocuidado.
+                Que tal tentar de novo?
+            </div>
+            <button class="btn-principal" onclick="reiniciarJogo()">🔄 Tentar Novamente</button>
+        </section>
+
+        <footer class="rodape">HeLa — Jogo educativo desenvolvido para ação de extensão · MUDI/UEM</footer>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" onclick="fecharComoJogarSeForFundo(event)">
+        <div class="modal-caixa">
+            <h2 id="modal-titulo">❓ Como Jogar</h2>
+            <div class="modal-conteudo">
+                <p>O HeLa é um jogo de perguntas em 5 fases curtas. Veja como jogar:</p>
+                <ul>
+                    <li>Leia (ou toque em "🔊 Ouvir") cada pergunta com calma.</li>
+                    <li>Toque na resposta que você acha certa.</li>
+                    <li>Não tem problema errar — o jogo sempre mostra e explica a resposta certa.</li>
+                    <li>Acertando 3 das 5 fases ou mais, você abre o cofre e vence.</li>
+                    <li>Use os botões "A+" e "A−" para deixar o texto maior ou menor.</li>
+                    <li>Use o botão "Contraste" se precisar de cores mais fortes.</li>
+                    <li>Use o botão "Som" para ligar ou desligar os efeitos sonoros.</li>
+                </ul>
+            </div>
+            <button class="btn-ouvir" onclick="lerTexto(textoComoJogar)">🔊 Ouvir instruções</button>
+            <button class="btn-principal" onclick="fecharComoJogar()">Fechar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
