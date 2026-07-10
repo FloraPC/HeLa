@@ -12,6 +12,8 @@
     <meta name="apple-mobile-web-app-title" content="HeLa">
     <meta name="color-scheme" content="light">
 
+    <link rel="manifest" href="manifest.json">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +25,6 @@
     <div id="bolhas"></div>
 
     <div class="app">
-
         <div class="barra-acessibilidade" role="toolbar" aria-label="Ferramentas de acessibilidade">
             <button onclick="mudarFonte(-1)" aria-label="Diminuir tamanho da letra">🔤 A−</button>
             <button onclick="mudarFonte(1)" aria-label="Aumentar tamanho da letra">🔤 A+</button>
@@ -67,11 +68,8 @@
             </div>
 
             <button class="btn-ouvir" onclick="lerTexto(textoLeituraAtual)">🔊 Ouvir esta fase</button>
-
             <div id="conteudo-fase"></div>
-
             <div id="feedback" class="feedback"></div>
-
             <button id="btn-continuar" class="btn-secundario hidden" onclick="avancarFase()">Continuar →</button>
         </section>
 
@@ -127,6 +125,13 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="prompts.js"></script>
+    <script src="app.js"></script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('Erro SW:', err));
+        }
+    </script>
 </body>
 </html>
